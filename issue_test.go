@@ -9,11 +9,9 @@ import (
 	"reflect"
 	"strings"
 	"testing"
-
-	"github.com/google/go-cmp/cmp"
-
 	"time"
 
+	"github.com/google/go-cmp/cmp"
 	"github.com/trivago/tgo/tcontainer"
 )
 
@@ -1754,4 +1752,36 @@ func TestIssueService_GetRemoteLinks(t *testing.T) {
 	if !(*remoteLinks)[0].Object.Status.Resolved {
 		t.Errorf("First remote link object status should be resolved")
 	}
+}
+
+func TestTime_MarshalJSON(t *testing.T) {
+	timeFormatParseFrom := "2006-01-02T15:04:05.999Z"
+	testCases := []struct {
+		name      string
+		inputTime string
+		expected  string
+	}{
+		{
+			name:      "test without ms",
+			inputTime: "2020-04-01T01:01:01.000Z",
+			expected:  "\"2020-04-01T01:01:01.000+0000\"",
+		},
+		{
+			name:      "test with ms",
+			inputTime: "2020-04-01T01:01:01.001Z",
+			expected:  "\"2020-04-01T01:01:01.001+0000\"",
+		},
+	}
+
+	for _, tt := range testCases {
+		t.Run(tt.name, func(t *testing.T) {
+			rawTime, _ := time.Parse(timeFormatParseFrom, tt.inputTime)
+			time := Time(rawTime)
+			got, _ := time.MarshalJSON()
+			if string(got) != tt.expected {
+				t.Errorf("Time.MarshalJSON() = %v, want %v", string(got), tt.expected)
+			}
+		})
+	}
+
 }
