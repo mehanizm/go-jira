@@ -1,8 +1,9 @@
-module github.com/andygrunwald/go-jira
+module github.com/mehanizm/go-jira
 
 go 1.12
 
 require (
+	github.com/andygrunwald/go-jira v1.12.0
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fatih/structs v1.0.0
 	github.com/google/go-cmp v0.3.0
